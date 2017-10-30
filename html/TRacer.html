@@ -1,0 +1,182 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>TRacer</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-10-17"><meta name="DC.source" content="TRacer.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">TRacer</a></li><li><a href="#2">Prepare GUI and Functions</a></li><li><a href="#4">Revision History (as function to make it collapsable)</a></li><li><a href="#6">Documentation</a></li><li><a href="#7">Global structs:</a></li><li><a href="#8">Functions:</a></li><li><a href="#9"><i>external</i> :</a></li></ul></div><h2>TRacer<a name="1"></a></h2><p><b>-working title-</b></p><p>This matlab program currently:</p><div><ul><li>displays multichannel TIRF data</li><li>detects, marks and correlates particles</li><li>extracts their intensity traces over the whole TIF sequence</li></ul></div><p>In the future, it should:</p><div><ul><li>support data measured with ALEX</li><li>extract FRET efficiencies and dynamics</li><li>plot stoichometry</li><li>correct for background and crosstalk</li><li>perform PDA with photon counts by emCCD calibration over multiple detection channels.</li></ul></div><div><ul><li>Additonal Notes: See RevHist() function below</li><li>Documentation: See readMe() function below*</li></ul></div><p><b>[HINT]</b> Please click on 'Publish' -&gt; Publish for a clean formatted Wiki-style presentation.</p><pre class="codeinput"><span class="keyword">function</span> TRacer()
+</pre><h2>Prepare GUI and Functions<a name="2"></a></h2><pre class="codeinput">addpath(genpath(<span class="string">'./functions'</span>));    <span class="comment">% Add subfolders to paths</span>
+load_vars();                        <span class="comment">% Declare global variables</span>
+GUImain;                            <span class="comment">% Load main window</span>
+<span class="comment">% GUIchannels;</span>
+</pre><img vspace="5" hspace="5" src="TRacer_01.png" alt=""> <pre class="codeinput"><span class="keyword">end</span>
+
+<span class="keyword">function</span> RevHist()
+</pre><h2>Revision History (as function to make it collapsable)<a name="4"></a></h2><pre class="language-matlab">0.0.1   [BS]    GUImain() &amp; openTIF() created
+0.1.0   [BS]    Opening <span class="string">4channel</span> <span class="string">data</span> <span class="string">works</span>
+0.1.1   [BS]    TIF <span class="string">slider</span> <span class="string">works</span>
+0.1.2   [BS]    Added <span class="string">GUI</span> <span class="string">options</span> <span class="string">and</span> <span class="string">calibration</span> <span class="string">functions</span>
+0.1.5   [BS]    peakFind() and <span class="string">peakMark()</span> <span class="string">functions</span> <span class="string">implemented</span>
+0.2.0   [BS]    added <span class="string">manual</span> <span class="string">selection</span> <span class="string">features</span> <span class="string">and</span> <span class="string">preview</span> <span class="string">axes</span>
+0.2.1   [BS]    added <span class="string">selected</span> <span class="string">particle</span> <span class="string">listbox</span>
+0.2.2   [BS]    added <span class="string">basic</span> <span class="string">trace</span> <span class="string">extraction</span>
+0.2.3   [BS]    added <span class="string">trace</span> <span class="string">axes</span>
+</pre><pre class="codeinput"><span class="keyword">end</span>
+
+<span class="keyword">function</span> readMe()
+</pre><h2>Documentation<a name="6"></a></h2><h2>Global structs:<a name="7"></a></h2><p>The global structs used are listed below. See individual GUI functions for documentation of substructs and variables.</p><div><ul><li><b><i>prefs</i>:</b>    Contains all GUI and fixed variables</li><li><b><i>h</i>:</b>        Contains handles (numerical) of all GUI objects</li><li><b><i>res</i>:</b>      Contains all results and values derived from actual data</li><li><b><i>img</i>:</b>      Contains raw and cropped data as image arrays</li></ul></div><p><b><i>prefs</i>:</b></p><div><ul><li>Check load_vars() function for documentation</li><li><i>currentframe</i>: Holds currently selected frame number, needed by updateGUI()</li></ul></div><div><ul><li><i>res{channel}</i> struct:*</li></ul></div><div><ul><li><i>click</i>:    Boolean 0 or 1 value to determine if image was clicked upon</li><li><i>lastpos</i>:</li><li><i>XY</i>:</li><li><i>trace</i>:    Holds raw intensity trace from</li></ul></div><h2>Functions:<a name="8"></a></h2><p>All functions are placed inside subdirectories of the main application. Currently, there are the following categories with the following functions:</p><h2><i>external</i> :<a name="9"></a></h2><pre class="codeinput"><span class="keyword">end</span>
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% TRacer 
+% *-working title-*
+%
+% This matlab program currently: 
+%
+% * displays multichannel TIRF data
+% * detects, marks and correlates particles
+% * extracts their intensity traces over the whole TIF sequence
+%
+% In the future, it should:
+%
+% 
+%
+% 
+% * support data measured with ALEX
+% * extract FRET efficiencies and dynamics
+% * plot stoichometry
+% * correct for background and crosstalk
+% * perform PDA with photon counts by emCCD calibration
+% over multiple detection channels.
+%
+% * Additonal Notes: See RevHist() function below
+% * Documentation: See readMe() function below*
+% 
+% *[HINT]* Please click on 'Publish' -> Publish for a clean formatted Wiki-style
+% presentation.
+%
+
+function TRacer()
+%%  Prepare GUI and Functions
+addpath(genpath('./functions'));    % Add subfolders to paths
+load_vars();                        % Declare global variables
+GUImain;                            % Load main window
+% GUIchannels;
+end
+
+function RevHist()
+%%  Revision History (as function to make it collapsable)
+%
+%   0.0.1   [BS]    GUImain() & openTIF() created
+%   0.1.0   [BS]    Opening 4channel data works
+%   0.1.1   [BS]    TIF slider works
+%   0.1.2   [BS]    Added GUI options and calibration functions
+%   0.1.5   [BS]    peakFind() and peakMark() functions implemented
+%   0.2.0   [BS]    added manual selection features and preview axes
+%   0.2.1   [BS]    added selected particle listbox
+%   0.2.2   [BS]    added basic trace extraction
+%   0.2.3   [BS]    added trace axes
+%
+end
+
+function readMe()
+%% Documentation
+%% Global structs:
+% The global structs used are listed below. See individual GUI functions
+% for documentation of substructs and variables.
+%
+% * *_prefs_:*    Contains all GUI and fixed variables
+% * *_h_:*        Contains handles (numerical) of all GUI objects
+% * *_res_:*      Contains all results and values derived from actual data
+% * *_img_:*      Contains raw and cropped data as image arrays
+%
+% *_prefs_:*
+%
+% * Check load_vars() function for documentation
+% * _currentframe_: Holds currently selected frame number, needed by
+% updateGUI()
+%
+%
+% * _res{channel}_ struct:*
+%
+% 
+% * _click_:    Boolean 0 or 1 value to determine if image was clicked upon
+% * _lastpos_:  
+% * _XY_:       
+% * _trace_:    Holds raw intensity trace from 
+%
+%% Functions:
+% All functions are placed inside subdirectories of the main application.
+% Currently, there are the following categories with the following
+% functions:
+%
+%% _external_ :
+%
+%
+%
+%
+
+end
+##### SOURCE END #####
+--></body></html>

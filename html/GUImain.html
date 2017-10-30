@@ -1,0 +1,634 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>GUImain</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-07-01"><meta name="DC.source" content="GUImain.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">TRacer Main GUI v0.1</a></li><li><a href="#9">CALLBACK FUNCTIONS</a></li><li><a href="#10">Main GUI Callbacks</a></li><li><a href="#11">Button Callbacks</a></li><li><a href="#13">generate totalimg &amp; cancel noise</a></li><li><a href="#14">perform particle recognition</a></li><li><a href="#16">Slider Callbacks</a></li></ul></div><h2>TRacer Main GUI v0.1<a name="1"></a></h2><pre class="language-matlab">generates <span class="string">main</span> <span class="string">figure</span>
+</pre><pre class="codeinput"><span class="keyword">function</span> GUImain()
+</pre><pre class="codeinput"><span class="keyword">global</span> handles;
+
+handles.WS = getfield(get(0, <span class="string">'MonitorPositions'</span>),{1,1:4});                              <span class="comment">% Get Screen number, offset and positions</span>
+handles.WS = [handles.WS(1,1:2),handles.WS(1,3:4)-handles.WS(1,1:2)] - [0,207,-2,38];   <span class="comment">% correct for Screen offset, Taskbar and Menubars</span>
+handles.AxesOffset = [handles.UIs,handles.UIs*3,256,512];
+
+handles.main = figure(<span class="keyword">...</span>
+    <span class="string">'Name'</span>,<span class="string">'Main Experiment Window'</span>,<span class="keyword">...</span>
+    <span class="string">'units'</span>,<span class="string">'pixels'</span>,<span class="keyword">...</span>
+    <span class="string">'Color'</span>, handles.BackColor,<span class="keyword">...</span>
+    <span class="string">'CloseRequestFcn'</span>, @main_close,<span class="keyword">...</span>
+    <span class="string">'OuterPosition'</span>, handles.WS);
+</pre><img vspace="5" hspace="5" src="GUImain_01.png" alt=""> <pre class="codeinput"><span class="comment">%%	UI Panels</span>
+
+handles.axesPanel = uipanel(<span class="keyword">...</span>
+    handles.main,<span class="keyword">...</span>
+    <span class="string">'Tag'</span>, <span class="string">'axesPanel'</span>,<span class="keyword">...</span>
+    <span class="string">'Title'</span>, <span class="string">'Fluorescence Channels'</span>,<span class="keyword">...</span>
+    <span class="string">'BackgroundColor'</span>,handles.BackColor,<span class="keyword">...</span>
+    <span class="string">'ForegroundColor'</span>, handles.ForeColor,<span class="keyword">...</span>
+    <span class="string">'Clipping'</span>, <span class="string">'on'</span>,<span class="keyword">...</span>
+    <span class="string">'Units'</span>,<span class="string">'pixels'</span>);
+
+handles.controlPanel1 = uipanel(<span class="keyword">...</span>
+    handles.main,<span class="keyword">...</span>
+    <span class="string">'Tag'</span>, <span class="string">'controlPanel1'</span>,<span class="keyword">...</span>
+    <span class="string">'Title'</span>, <span class="string">'Tracer Controls'</span>,<span class="keyword">...</span>
+    <span class="string">'BackgroundColor'</span>,handles.BackColor,<span class="keyword">...</span>
+    <span class="string">'ForegroundColor'</span>, handles.ForeColor,<span class="keyword">...</span>
+    <span class="string">'Clipping'</span>, <span class="string">'on'</span>,<span class="keyword">...</span>
+    <span class="string">'Units'</span>,<span class="string">'pixels'</span>);
+
+handles.controlPanel2 = uipanel(<span class="keyword">...</span>
+    handles.main,<span class="keyword">...</span>
+    <span class="string">'Tag'</span>, <span class="string">'controlPanel2'</span>,<span class="keyword">...</span>
+    <span class="string">'Title'</span>, <span class="string">'Mapping Controls'</span>,<span class="keyword">...</span>
+    <span class="string">'BackgroundColor'</span>,handles.BackColor,<span class="keyword">...</span>
+    <span class="string">'ForegroundColor'</span>, handles.ForeColor,<span class="keyword">...</span>
+    <span class="string">'Clipping'</span>, <span class="string">'on'</span>,<span class="keyword">...</span>
+    <span class="string">'Units'</span>,<span class="string">'pixels'</span>);
+</pre><img vspace="5" hspace="5" src="GUImain_02.png" alt=""> <pre class="codeinput"><span class="comment">%%	Axes/Images</span>
+
+handles.ax1 = axes(<span class="keyword">...</span>
+    <span class="string">'Parent'</span>,handles.axesPanel,<span class="keyword">...</span>
+    <span class="string">'units'</span>,<span class="string">'pixels'</span>,<span class="keyword">...</span>
+    <span class="string">'Color'</span>,handles.AxesColor,<span class="keyword">...</span>
+    <span class="string">'AmbientLightColor'</span>,handles.AxesColor,<span class="keyword">...</span><span class="comment">%     'Position', handles.AxesOffset,...</span>
+    <span class="string">'YDir'</span>, <span class="string">'reverse'</span>,<span class="keyword">...</span>
+    <span class="string">'XLim'</span>,[1,256],<span class="string">'YLim'</span>,[1,512],<span class="keyword">...</span>
+    <span class="string">'Visible'</span>,<span class="string">'off'</span>);
+
+handles.ax2 = axes(<span class="keyword">...</span>
+    <span class="string">'Parent'</span>,handles.axesPanel,<span class="keyword">...</span>
+    <span class="string">'units'</span>,<span class="string">'pixels'</span>,<span class="keyword">...</span>
+    <span class="string">'Color'</span>,handles.AxesColor,<span class="keyword">...</span>
+    <span class="string">'YDir'</span>, <span class="string">'reverse'</span>,<span class="keyword">...</span>
+    <span class="string">'XLim'</span>,[1,256],<span class="string">'YLim'</span>,[1,512],<span class="keyword">...</span>
+    <span class="string">'Visible'</span>,<span class="string">'off'</span>);
+
+handles.ax3 = axes(<span class="keyword">...</span>
+    <span class="string">'Parent'</span>,handles.axesPanel,<span class="keyword">...</span>
+    <span class="string">'units'</span>,<span class="string">'pixels'</span>,<span class="keyword">...</span>
+    <span class="string">'Color'</span>,handles.AxesColor,<span class="keyword">...</span>
+    <span class="string">'YDir'</span>, <span class="string">'reverse'</span>,<span class="keyword">...</span>
+    <span class="string">'XLim'</span>,[1,256],<span class="string">'YLim'</span>,[1,512],<span class="keyword">...</span>
+    <span class="string">'Visible'</span>,<span class="string">'off'</span>);
+
+handles.ax4 = axes(<span class="keyword">...</span>
+    <span class="string">'Parent'</span>,handles.axesPanel,<span class="keyword">...</span>
+    <span class="string">'units'</span>,<span class="string">'pixels'</span>,<span class="keyword">...</span>
+    <span class="string">'Color'</span>,handles.AxesColor,<span class="keyword">...</span>
+    <span class="string">'YDir'</span>, <span class="string">'reverse'</span>,<span class="keyword">...</span>
+    <span class="string">'XLim'</span>,[1,256],<span class="string">'YLim'</span>,[1,512],<span class="keyword">...</span>
+    <span class="string">'Visible'</span>,<span class="string">'off'</span>);
+</pre><pre class="codeinput"><span class="comment">%%	Sliders</span>
+
+handles.sldPlay = uicontrol(<span class="keyword">...</span>
+    handles.axesPanel,<span class="keyword">...</span>
+    <span class="string">'Tag'</span>, <span class="string">'sldPlay'</span>, <span class="keyword">...</span>
+    <span class="string">'Style'</span>,<span class="string">'slider'</span>,<span class="keyword">...</span><span class="comment">%     'Position', [30,handles.AxesOffset(1,2)-32, 4*256, 30],...</span>
+    <span class="string">'Value'</span>,1,<span class="keyword">...</span>
+    <span class="string">'Min'</span>,1,<span class="string">'Max'</span>,2,<span class="keyword">...</span>
+    <span class="string">'SliderStep'</span>,[1,1],<span class="keyword">...</span>
+    <span class="string">'Callback'</span>, @sldPlay_move,<span class="keyword">...</span>
+    <span class="string">'Visible'</span>, <span class="string">'off'</span>);
+</pre><pre class="codeinput"><span class="comment">%%	Control Buttons</span>
+
+handles.cbn_load1 = uicontrol(<span class="keyword">...</span>
+    handles.controlPanel1,<span class="keyword">...</span>
+    <span class="string">'Tag'</span>, <span class="string">'cbn_load1'</span>,<span class="keyword">...</span>
+    <span class="string">'Style'</span>, <span class="string">'pushbutton'</span>,<span class="keyword">...</span>
+    <span class="string">'String'</span>, <span class="string">'Load 1st camera'</span>,<span class="keyword">...</span>
+    <span class="string">'Callback'</span>, @cbnLoad1);
+
+handles.cbn_load2 = uicontrol(<span class="keyword">...</span>
+    handles.controlPanel1,<span class="keyword">...</span>
+    <span class="string">'Tag'</span>, <span class="string">'cbn_load2'</span>,<span class="keyword">...</span>
+    <span class="string">'Style'</span>, <span class="string">'pushbutton'</span>,<span class="keyword">...</span>
+    <span class="string">'String'</span>, <span class="string">'Load 2nd camera'</span>,<span class="keyword">...</span>
+    <span class="string">'Callback'</span>, @cbnLoad2);
+
+handles.cbn_calibrate = uicontrol(<span class="keyword">...</span>
+    handles.controlPanel2,<span class="keyword">...</span>
+    <span class="string">'Tag'</span>, <span class="string">'cbn_cal'</span>,<span class="keyword">...</span>
+    <span class="string">'Style'</span>, <span class="string">'pushbutton'</span>,<span class="keyword">...</span>
+    <span class="string">'String'</span>, <span class="string">'Generate Map'</span>,<span class="keyword">...</span>
+    <span class="string">'Callback'</span>, @cbnCal);
+
+handles.cbn_loadmap = uicontrol(<span class="keyword">...</span>
+    handles.controlPanel2,<span class="keyword">...</span>
+    <span class="string">'Tag'</span>, <span class="string">'cbn_loadmap'</span>,<span class="keyword">...</span>
+    <span class="string">'Style'</span>, <span class="string">'pushbutton'</span>,<span class="keyword">...</span>
+    <span class="string">'String'</span>, <span class="string">'Load Map'</span>,<span class="keyword">...</span>
+    <span class="string">'Callback'</span>, @cbnLoadMap);
+</pre><img vspace="5" hspace="5" src="GUImain_03.png" alt=""> <pre class="codeinput"><span class="comment">%%	Check Boxes</span>
+
+handles.ckx_load1 = uicontrol(<span class="keyword">...</span>
+    handles.controlPanel1,<span class="keyword">...</span>
+    <span class="string">'Tag'</span>, <span class="string">'ckx_load1'</span>,<span class="keyword">...</span>
+    <span class="string">'Style'</span>, <span class="string">'checkbox'</span>,<span class="keyword">...</span>
+    <span class="string">'BackgroundColor'</span>,handles.BackColor,<span class="keyword">...</span>
+    <span class="string">'ForegroundColor'</span>,handles.ForeColor,<span class="keyword">...</span>
+    <span class="string">'Enable'</span>,<span class="string">'off'</span>,<span class="keyword">...</span>
+    <span class="string">'Value'</span>,0);
+
+handles.ckx_load2 = uicontrol(<span class="keyword">...</span>
+    handles.controlPanel1,<span class="keyword">...</span>
+    <span class="string">'Tag'</span>, <span class="string">'ckx_load2'</span>,<span class="keyword">...</span>
+    <span class="string">'Style'</span>, <span class="string">'checkbox'</span>,<span class="keyword">...</span>
+    <span class="string">'BackgroundColor'</span>,handles.BackColor,<span class="keyword">...</span>
+    <span class="string">'ForegroundColor'</span>,handles.ForeColor,<span class="keyword">...</span>
+    <span class="string">'Enable'</span>,<span class="string">'off'</span>,<span class="keyword">...</span>
+    <span class="string">'Value'</span>,0);
+
+handles.ckx_cal = uicontrol(<span class="keyword">...</span>
+    handles.controlPanel2,<span class="keyword">...</span>
+    <span class="string">'Tag'</span>, <span class="string">'ckx_cal'</span>,<span class="keyword">...</span>
+    <span class="string">'Style'</span>, <span class="string">'checkbox'</span>,<span class="keyword">...</span>
+    <span class="string">'BackgroundColor'</span>,handles.BackColor,<span class="keyword">...</span>
+    <span class="string">'ForegroundColor'</span>,handles.ForeColor,<span class="keyword">...</span>
+    <span class="string">'Enable'</span>,<span class="string">'off'</span>,<span class="keyword">...</span>
+    <span class="string">'Value'</span>,0);
+set(handles.main,     <span class="string">'ResizeFcn'</span>,@main_resize);
+</pre><img vspace="5" hspace="5" src="GUImain_04.png" alt=""> <pre class="codeinput"><span class="keyword">end</span>
+</pre><h2>CALLBACK FUNCTIONS<a name="9"></a></h2><div><ul><li>GUI Resize Function</li><li>Slider Callbacks</li><li>Button Callbacks</li><li>MouseMove Callback</li></ul></div><h2>Main GUI Callbacks<a name="10"></a></h2><pre class="codeinput"><span class="keyword">function</span> main_resize(hObj, e, h)
+<span class="comment">% defines all UI control positions and adjusts on window resize</span>
+
+<span class="keyword">global</span> handles;
+handles.WS = get(handles.main,<span class="string">'Position'</span>); <span class="comment">% get window size</span>
+
+<span class="comment">% try</span>
+    <span class="comment">% Panels</span>
+    set(handles.axesPanel,<span class="string">'Position'</span>, [handles.UIs,handles.WS(1,4)-handles.APH-handles.UIs,handles.WS(1,3)-handles.UIs * 2, handles.APH]);<span class="comment">%[40,handles.WS(1,4)-72-612,handles.WS(1,3)-92,612]);</span>
+    set(handles.controlPanel1, <span class="string">'Position'</span>, [handles.UIs,handles.WS(1,4) - handles.UIs * 2 - handles.CPH - handles.APH,handles.CPW, handles.CPH]);
+    set(handles.controlPanel2, <span class="string">'Position'</span>, [handles.UIs * 2 + getfield(get(handles.controlPanel1,<span class="string">'Position'</span>),{1,3}),handles.WS(1,4) - handles.UIs * 2 - handles.CPH - handles.APH,handles.CPW, handles.CPH]);
+
+    <span class="comment">% Axes</span>
+    set(handles.ax1, <span class="string">'Position'</span>, handles.AxesOffset);
+    set(handles.ax2, <span class="string">'Position'</span>, handles.AxesOffset + 1 * [handles.AxesOffset(1,3),0,0,0]);
+    set(handles.ax3, <span class="string">'Position'</span>, handles.AxesOffset + 2 * [handles.AxesOffset(1,3),0,0,0]);
+    set(handles.ax4, <span class="string">'Position'</span>, handles.AxesOffset + 3 * [handles.AxesOffset(1,3),0,0,0]);
+
+    <span class="comment">% Sliders</span>
+    set(handles.sldPlay, <span class="string">'Position'</span>, [handles.UIs,handles.AxesOffset(1,2)-32, 4*256, 30]);
+
+    <span class="comment">% Buttons</span>
+    set(handles.cbn_load1, <span class="string">'Position'</span>,[handles.UIs,handles.CPH - handles.UIs * 1.5 - handles.cbH,handles.cbW,handles.cbH]);
+    set(handles.cbn_load2, <span class="string">'Position'</span>,[handles.UIs,handles.CPH - handles.UIs * 2.5 - handles.cbH * 2,handles.cbW,handles.cbH]);
+
+    set(handles.cbn_calibrate, <span class="string">'Position'</span>,[handles.UIs,handles.CPH - handles.UIs * 1.5 - handles.cbH,handles.cbW,handles.cbH]);
+    set(handles.cbn_loadmap, <span class="string">'Position'</span>,[handles.UIs,handles.CPH - handles.UIs * 2.5 - handles.cbH * 2,handles.cbW,handles.cbH]);
+
+    <span class="comment">% Check Boxes</span>
+    set(handles.ckx_load1,<span class="string">'Position'</span>,[handles.UIs * 2 + handles.cbW,handles.CPH - handles.UIs * 1.5 - handles.cbH,handles.ckW,handles.ckH]);
+    set(handles.ckx_load2,<span class="string">'Position'</span>,[handles.UIs * 2 + handles.cbW,handles.CPH - handles.UIs * 2.5 - handles.cbH * 2,handles.ckW,handles.ckH]);
+
+    set(handles.ckx_cal,<span class="string">'Position'</span>,[handles.UIs * 2 + handles.cbW,handles.CPH - handles.UIs * 2.5 - handles.cbH * 1.5,handles.ckW,handles.ckH]);
+
+    <span class="comment">% Captions</span>
+
+<span class="comment">% catch</span>
+<span class="comment">%     disp('ResizeFcn: Error occured');</span>
+<span class="comment">% end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> main_close(hObj, e, h)
+<span class="comment">%   Close Main window and clear memory</span>
+<span class="keyword">global</span> handles;
+close(handles.main);
+<span class="keyword">try</span>
+    clear <span class="string">all</span>;
+    clc;
+<span class="keyword">catch</span>
+    close <span class="string">all</span> <span class="string">force</span>;
+<span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><h2>Button Callbacks<a name="11"></a></h2><pre class="codeinput"><span class="keyword">function</span> cbnLoad1(hObj, e, h)
+<span class="keyword">global</span> handles img1;
+<span class="keyword">try</span>
+    [filename filepath] = uigetfile(<span class="string">'*.tif;*.tiff'</span>,<span class="string">'TIF Images'</span>);
+    fullpath = [filepath,filename];
+    [img1,tifinfo1] = openTIF(fullpath);
+    set(handles.sldPlay, <span class="string">'Min'</span>,1, <span class="string">'Max'</span>, size(img1,3), <span class="string">'SliderStep'</span>, [1,5]/(size(img1,3)-1), <span class="string">'Value'</span>, 1, <span class="string">'Visible'</span>, <span class="string">'on'</span>);
+    sldPlay_move(1);
+    set(handles.ckx_load1, <span class="string">'Value'</span>, 1)
+<span class="keyword">catch</span>
+    set(handles.ckx_load1, <span class="string">'Value'</span>, 0)
+    disp(<span class="string">'cbnLoad1: Error occured.'</span>);
+<span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> cbnLoad2(hObj, e, h)
+<span class="keyword">global</span> handles img2
+<span class="keyword">try</span>
+[filename filepath] = uigetfile(<span class="string">'*.tif;*.tiff'</span>,<span class="string">'TIF Images'</span>);
+fullpath = [filepath,filename];
+[img2,tifinfo2] = openTIF(fullpath);
+set(handles.sldPlay, <span class="string">'Min'</span>,1, <span class="string">'Max'</span>, size(img2,3), <span class="string">'SliderStep'</span>, [1,5]/(size(img2,3)-1), <span class="string">'Value'</span>, 1, <span class="string">'Visible'</span>, <span class="string">'on'</span>);
+sldPlay_move(1);
+set(handles.ckx_load2, <span class="string">'Value'</span>, 1)
+<span class="keyword">catch</span>
+     set(handles.ckx_load2, <span class="string">'Value'</span>, 0)
+     disp(<span class="string">'cbnLoad2: Error occured.'</span>);
+<span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> cbnCal(hObj, e, h)
+</pre><pre class="codeinput"><span class="comment">%</span>
+<span class="comment">% starts mapping procedure (particle detection in multiple channels)</span>
+<span class="comment">%</span>
+</pre><h2>generate totalimg &amp; cancel noise<a name="13"></a></h2><pre class="codeinput"><span class="keyword">global</span> handles img1 img2;
+<span class="keyword">if</span> get(handles.ckx_load1, <span class="string">'Value'</span>) == 1 &amp;&amp; get(handles.ckx_load2, <span class="string">'Value'</span>) == 1
+   tifs = size(img1,3);
+   [imgL1, imgR1, imgL2, imgR2] = deal(double(zeros(size(img1,1),size(img1,2)/2)));
+   <span class="keyword">for</span> frame = 1:tifs
+       imgL1 = imgL1 + double(img1(1:end,1:end/2,frame)/tifs);
+       imgR1 = imgR1 + double(img1(1:end,end/2+1:end,frame)/tifs);
+       imgL2 = imgL2 + double(img2(1:end,1:end/2,frame)/tifs);
+       imgR2 = imgR2 + double(img2(1:end,end/2+1:end,frame)/tifs);
+   <span class="keyword">end</span>
+   img1(:,:,tifs + 1) = [imgL1,imgR1];
+   img2(:,:,tifs + 1) = [imgL2,imgR2];
+   set(handles.sldPlay, <span class="string">'Max'</span>, tifs + 1,<span class="string">'Value'</span>, tifs + 1);
+   sldPlay_move(handles.sldPlay,[]);
+<span class="keyword">end</span>
+</pre><h2>perform particle recognition<a name="14"></a></h2><pre class="codeinput">disp(<span class="string">'Command line ready'</span>);
+</pre><pre class="codeinput"><span class="keyword">end</span>
+
+<span class="keyword">function</span> cbnLoadMap(hObj, e, h)
+
+<span class="keyword">end</span>
+</pre><h2>Slider Callbacks<a name="16"></a></h2><pre class="codeinput"><span class="keyword">function</span> sldPlay_move(hObj, e, h)
+<span class="keyword">global</span> handles img1 img2;
+frame = round(get(handles.sldPlay, <span class="string">'Value'</span>));
+
+imshow(img1(1:end,1:end/2,frame), <span class="string">'Parent'</span>, handles.ax1, <span class="string">'DisplayRange'</span>, [min(min(img1(1:end,1:end/2,frame))),max(max(img1(1:end,1:end/2,frame)))], <span class="string">'Colormap'</span>, colormap(gray));
+imshow(img1(1:end,end/2+1:end,frame), <span class="string">'Parent'</span>, handles.ax2, <span class="string">'DisplayRange'</span>, [min(min(img1(1:end,end/2+1:end,frame))),max(max(img1(1:end,end/2+1:end,frame)))], <span class="string">'Colormap'</span>, colormap(gray));
+imshow(img2(1:end,1:end/2,frame), <span class="string">'Parent'</span>, handles.ax3, <span class="string">'DisplayRange'</span>, [min(min(img2(1:end,1:end/2,frame))),max(max(img2(1:end,1:end/2,frame)))], <span class="string">'Colormap'</span>, colormap(gray));
+imshow(img2(1:end,end/2+1:end,frame), <span class="string">'Parent'</span>, handles.ax4, <span class="string">'DisplayRange'</span>, [min(min(img2(1:end,end/2+1:end,frame))),max(max(img2(1:end,end/2+1:end,frame)))], <span class="string">'Colormap'</span>, colormap(gray));
+<span class="comment">% imagesc('Parent',handles.ax2, 'CData', img1(1:end,end/2+1:end,frame));</span>
+<span class="comment">% imagesc('Parent',handles.ax3, 'CData', img2(1:end,1:end/2,frame));</span>
+<span class="comment">% imagesc('Parent',handles.ax4, 'CData', img2(1:end,end/2+1:end,frame));</span>
+
+<span class="keyword">end</span>
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%%  TRacer Main GUI v0.1
+%
+%   generates main figure
+%
+
+function GUImain()
+global handles;
+
+handles.WS = getfield(get(0, 'MonitorPositions'),{1,1:4});                              % Get Screen number, offset and positions
+handles.WS = [handles.WS(1,1:2),handles.WS(1,3:4)-handles.WS(1,1:2)] - [0,207,-2,38];   % correct for Screen offset, Taskbar and Menubars
+handles.AxesOffset = [handles.UIs,handles.UIs*3,256,512];
+
+handles.main = figure(...
+    'Name','Main Experiment Window',...
+    'units','pixels',...
+    'Color', handles.BackColor,...
+    'CloseRequestFcn', @main_close,...
+    'OuterPosition', handles.WS);
+
+%%	UI Panels
+
+handles.axesPanel = uipanel(...
+    handles.main,...
+    'Tag', 'axesPanel',...
+    'Title', 'Fluorescence Channels',...
+    'BackgroundColor',handles.BackColor,...
+    'ForegroundColor', handles.ForeColor,...
+    'Clipping', 'on',...
+    'Units','pixels');
+
+handles.controlPanel1 = uipanel(...
+    handles.main,...
+    'Tag', 'controlPanel1',...
+    'Title', 'Tracer Controls',...
+    'BackgroundColor',handles.BackColor,...
+    'ForegroundColor', handles.ForeColor,...
+    'Clipping', 'on',...
+    'Units','pixels');
+
+handles.controlPanel2 = uipanel(...
+    handles.main,...
+    'Tag', 'controlPanel2',...
+    'Title', 'Mapping Controls',...
+    'BackgroundColor',handles.BackColor,...
+    'ForegroundColor', handles.ForeColor,...
+    'Clipping', 'on',...
+    'Units','pixels');
+
+%%	Axes/Images
+
+handles.ax1 = axes(...
+    'Parent',handles.axesPanel,...
+    'units','pixels',...
+    'Color',handles.AxesColor,...
+    'AmbientLightColor',handles.AxesColor,...%     'Position', handles.AxesOffset,...
+    'YDir', 'reverse',...
+    'XLim',[1,256],'YLim',[1,512],...
+    'Visible','off');
+
+handles.ax2 = axes(...
+    'Parent',handles.axesPanel,...
+    'units','pixels',...
+    'Color',handles.AxesColor,...
+    'YDir', 'reverse',...
+    'XLim',[1,256],'YLim',[1,512],...
+    'Visible','off');
+
+handles.ax3 = axes(...
+    'Parent',handles.axesPanel,...
+    'units','pixels',...
+    'Color',handles.AxesColor,...
+    'YDir', 'reverse',...
+    'XLim',[1,256],'YLim',[1,512],...
+    'Visible','off');
+
+handles.ax4 = axes(...
+    'Parent',handles.axesPanel,...
+    'units','pixels',...
+    'Color',handles.AxesColor,...
+    'YDir', 'reverse',...
+    'XLim',[1,256],'YLim',[1,512],...
+    'Visible','off');
+
+%%	Sliders
+
+handles.sldPlay = uicontrol(...
+    handles.axesPanel,...
+    'Tag', 'sldPlay', ...
+    'Style','slider',...%     'Position', [30,handles.AxesOffset(1,2)-32, 4*256, 30],...
+    'Value',1,...
+    'Min',1,'Max',2,...
+    'SliderStep',[1,1],...
+    'Callback', @sldPlay_move,...
+    'Visible', 'off');
+
+%%	Control Buttons
+
+handles.cbn_load1 = uicontrol(...
+    handles.controlPanel1,...
+    'Tag', 'cbn_load1',...
+    'Style', 'pushbutton',...
+    'String', 'Load 1st camera',...
+    'Callback', @cbnLoad1);
+
+handles.cbn_load2 = uicontrol(...
+    handles.controlPanel1,...
+    'Tag', 'cbn_load2',...
+    'Style', 'pushbutton',...
+    'String', 'Load 2nd camera',...
+    'Callback', @cbnLoad2);
+
+handles.cbn_calibrate = uicontrol(...
+    handles.controlPanel2,...
+    'Tag', 'cbn_cal',...
+    'Style', 'pushbutton',...
+    'String', 'Generate Map',...
+    'Callback', @cbnCal);
+
+handles.cbn_loadmap = uicontrol(...
+    handles.controlPanel2,...
+    'Tag', 'cbn_loadmap',...
+    'Style', 'pushbutton',...
+    'String', 'Load Map',...
+    'Callback', @cbnLoadMap);
+
+%%	Check Boxes
+
+handles.ckx_load1 = uicontrol(...
+    handles.controlPanel1,...
+    'Tag', 'ckx_load1',...
+    'Style', 'checkbox',...
+    'BackgroundColor',handles.BackColor,...
+    'ForegroundColor',handles.ForeColor,...
+    'Enable','off',...
+    'Value',0);
+
+handles.ckx_load2 = uicontrol(...
+    handles.controlPanel1,...
+    'Tag', 'ckx_load2',...
+    'Style', 'checkbox',...
+    'BackgroundColor',handles.BackColor,...
+    'ForegroundColor',handles.ForeColor,...
+    'Enable','off',...
+    'Value',0);
+
+handles.ckx_cal = uicontrol(...
+    handles.controlPanel2,...
+    'Tag', 'ckx_cal',...
+    'Style', 'checkbox',...
+    'BackgroundColor',handles.BackColor,...
+    'ForegroundColor',handles.ForeColor,...
+    'Enable','off',...
+    'Value',0);
+set(handles.main,     'ResizeFcn',@main_resize);
+end
+
+%%  CALLBACK FUNCTIONS
+%
+% * GUI Resize Function
+% * Slider Callbacks
+% * Button Callbacks
+% * MouseMove Callback
+%
+
+%%  Main GUI Callbacks
+
+function main_resize(hObj, e, h)
+% defines all UI control positions and adjusts on window resize
+
+global handles;
+handles.WS = get(handles.main,'Position'); % get window size
+
+% try
+    % Panels
+    set(handles.axesPanel,'Position', [handles.UIs,handles.WS(1,4)-handles.APH-handles.UIs,handles.WS(1,3)-handles.UIs * 2, handles.APH]);%[40,handles.WS(1,4)-72-612,handles.WS(1,3)-92,612]);
+    set(handles.controlPanel1, 'Position', [handles.UIs,handles.WS(1,4) - handles.UIs * 2 - handles.CPH - handles.APH,handles.CPW, handles.CPH]);
+    set(handles.controlPanel2, 'Position', [handles.UIs * 2 + getfield(get(handles.controlPanel1,'Position'),{1,3}),handles.WS(1,4) - handles.UIs * 2 - handles.CPH - handles.APH,handles.CPW, handles.CPH]);
+    
+    % Axes
+    set(handles.ax1, 'Position', handles.AxesOffset);
+    set(handles.ax2, 'Position', handles.AxesOffset + 1 * [handles.AxesOffset(1,3),0,0,0]);
+    set(handles.ax3, 'Position', handles.AxesOffset + 2 * [handles.AxesOffset(1,3),0,0,0]);
+    set(handles.ax4, 'Position', handles.AxesOffset + 3 * [handles.AxesOffset(1,3),0,0,0]);
+    
+    % Sliders
+    set(handles.sldPlay, 'Position', [handles.UIs,handles.AxesOffset(1,2)-32, 4*256, 30]);
+    
+    % Buttons
+    set(handles.cbn_load1, 'Position',[handles.UIs,handles.CPH - handles.UIs * 1.5 - handles.cbH,handles.cbW,handles.cbH]);
+    set(handles.cbn_load2, 'Position',[handles.UIs,handles.CPH - handles.UIs * 2.5 - handles.cbH * 2,handles.cbW,handles.cbH]);
+    
+    set(handles.cbn_calibrate, 'Position',[handles.UIs,handles.CPH - handles.UIs * 1.5 - handles.cbH,handles.cbW,handles.cbH]);
+    set(handles.cbn_loadmap, 'Position',[handles.UIs,handles.CPH - handles.UIs * 2.5 - handles.cbH * 2,handles.cbW,handles.cbH]);
+    
+    % Check Boxes
+    set(handles.ckx_load1,'Position',[handles.UIs * 2 + handles.cbW,handles.CPH - handles.UIs * 1.5 - handles.cbH,handles.ckW,handles.ckH]);
+    set(handles.ckx_load2,'Position',[handles.UIs * 2 + handles.cbW,handles.CPH - handles.UIs * 2.5 - handles.cbH * 2,handles.ckW,handles.ckH]);
+    
+    set(handles.ckx_cal,'Position',[handles.UIs * 2 + handles.cbW,handles.CPH - handles.UIs * 2.5 - handles.cbH * 1.5,handles.ckW,handles.ckH]);
+
+    % Captions
+    
+% catch
+%     disp('ResizeFcn: Error occured');
+% end
+end
+
+function main_close(hObj, e, h)
+%   Close Main window and clear memory
+global handles;
+close(handles.main);
+try
+    clear all;
+    clc;
+catch
+    close all force;
+end
+end
+%%  Button Callbacks
+
+function cbnLoad1(hObj, e, h)
+global handles img1;
+try
+    [filename filepath] = uigetfile('*.tif;*.tiff','TIF Images');
+    fullpath = [filepath,filename];
+    [img1,tifinfo1] = openTIF(fullpath);
+    set(handles.sldPlay, 'Min',1, 'Max', size(img1,3), 'SliderStep', [1,5]/(size(img1,3)-1), 'Value', 1, 'Visible', 'on');
+    sldPlay_move(1);
+    set(handles.ckx_load1, 'Value', 1)
+catch
+    set(handles.ckx_load1, 'Value', 0)
+    disp('cbnLoad1: Error occured.');
+end
+end
+
+function cbnLoad2(hObj, e, h)
+global handles img2
+try
+[filename filepath] = uigetfile('*.tif;*.tiff','TIF Images');
+fullpath = [filepath,filename];
+[img2,tifinfo2] = openTIF(fullpath);
+set(handles.sldPlay, 'Min',1, 'Max', size(img2,3), 'SliderStep', [1,5]/(size(img2,3)-1), 'Value', 1, 'Visible', 'on');
+sldPlay_move(1);
+set(handles.ckx_load2, 'Value', 1)
+catch
+     set(handles.ckx_load2, 'Value', 0)
+     disp('cbnLoad2: Error occured.');
+end
+end
+
+function cbnCal(hObj, e, h)
+%
+% starts mapping procedure (particle detection in multiple channels)
+%
+%%  generate totalimg & cancel noise
+global handles img1 img2;
+if get(handles.ckx_load1, 'Value') == 1 && get(handles.ckx_load2, 'Value') == 1
+   tifs = size(img1,3);
+   [imgL1, imgR1, imgL2, imgR2] = deal(double(zeros(size(img1,1),size(img1,2)/2)));
+   for frame = 1:tifs
+       imgL1 = imgL1 + double(img1(1:end,1:end/2,frame)/tifs);
+       imgR1 = imgR1 + double(img1(1:end,end/2+1:end,frame)/tifs);
+       imgL2 = imgL2 + double(img2(1:end,1:end/2,frame)/tifs);
+       imgR2 = imgR2 + double(img2(1:end,end/2+1:end,frame)/tifs);
+   end
+   img1(:,:,tifs + 1) = [imgL1,imgR1];
+   img2(:,:,tifs + 1) = [imgL2,imgR2];
+   set(handles.sldPlay, 'Max', tifs + 1,'Value', tifs + 1);
+   sldPlay_move(handles.sldPlay,[]);
+end
+
+%%  perform particle recognition
+disp('Command line ready');
+end
+
+function cbnLoadMap(hObj, e, h)
+
+end
+
+
+%%  Slider Callbacks
+
+function sldPlay_move(hObj, e, h)
+global handles img1 img2;
+frame = round(get(handles.sldPlay, 'Value'));
+
+imshow(img1(1:end,1:end/2,frame), 'Parent', handles.ax1, 'DisplayRange', [min(min(img1(1:end,1:end/2,frame))),max(max(img1(1:end,1:end/2,frame)))], 'Colormap', colormap(gray));
+imshow(img1(1:end,end/2+1:end,frame), 'Parent', handles.ax2, 'DisplayRange', [min(min(img1(1:end,end/2+1:end,frame))),max(max(img1(1:end,end/2+1:end,frame)))], 'Colormap', colormap(gray));
+imshow(img2(1:end,1:end/2,frame), 'Parent', handles.ax3, 'DisplayRange', [min(min(img2(1:end,1:end/2,frame))),max(max(img2(1:end,1:end/2,frame)))], 'Colormap', colormap(gray));
+imshow(img2(1:end,end/2+1:end,frame), 'Parent', handles.ax4, 'DisplayRange', [min(min(img2(1:end,end/2+1:end,frame))),max(max(img2(1:end,end/2+1:end,frame)))], 'Colormap', colormap(gray));
+% imagesc('Parent',handles.ax2, 'CData', img1(1:end,end/2+1:end,frame));
+% imagesc('Parent',handles.ax3, 'CData', img2(1:end,1:end/2,frame));
+% imagesc('Parent',handles.ax4, 'CData', img2(1:end,end/2+1:end,frame));
+
+end
+
+##### SOURCE END #####
+--></body></html>
