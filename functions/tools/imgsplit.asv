@@ -1,0 +1,33 @@
+function [out] = imgsplit( img, P )
+%IMGSPLIT splits an stack img and returns arrays with the desired splitting
+%pattern defined in P
+
+% P is a 1-dim row vector
+
+
+%% Exceptions
+f = 'imgsplit]:';
+MEsz = MException('imgsplit:size', ...
+    [f,'The split pattern defines a total of %d, while the input stack only contains %d images.'],[sum(P(:)),size(img,3)]);
+MEns = MException('imgsplit:nostack', ...
+    [f,'The input image consists of only one image.']);
+MEns = MException('imgsplit:dims', ...
+   [f,'The array of ]
+
+%%
+
+if max(size(P)) > size(img,3)
+    throw(ME
+end
+
+% initiate output array
+[out{1:numel(P)}] = deal({});
+out{1} = img(:,:,1:P(1));
+
+for i=1:numel(P)
+    out{i} = img(:,:,P(i):P(i+1));
+end
+
+
+end
+
