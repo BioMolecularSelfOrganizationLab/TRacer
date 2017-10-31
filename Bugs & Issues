@@ -1,3 +1,6 @@
+
+Issue 1:
+
 On file getNumSteps change (around line 125)
   ans(i-half_b:i+half_t) = round(linspace(ans(i),ans(i+1),half_b + half_t + 1));
 by
