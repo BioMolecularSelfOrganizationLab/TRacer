@@ -1,0 +1,4 @@
+On file getNumSteps change (around line 125)
+- ans(i-half_b:i+half_t) = round(linspace(ans(i),ans(i+1),half_b + half_t + 1));
+by
+- ans(max(1,i-half_b):min(i+half_t,length(steps))) = round(linspace(ans(i),ans(i+1),min(i+half_t,length(steps)) - max(1,i-half_b) + 1));
