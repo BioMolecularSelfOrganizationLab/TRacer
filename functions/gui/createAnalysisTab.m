@@ -333,12 +333,12 @@ function dwell_time_lbx_changed(~,~,G)
     
 	c_linear = uimenu(...
     'Parent',c,...
-    'Label','Linear scale',...
+    'Label','Linear',...
     'Callback',{@change_display_mode,G});
 
-    c_log = uimenu(...
+	c_log = uimenu(...
     'Parent',c,...
-    'Label','Semi-Log scale',...
+    'Label','Log',...
     'Callback',{@change_display_mode,G});
 
     if dwell_select == 1
@@ -395,7 +395,7 @@ function tracer_lbx_changed(~,~,G)
             
             yyaxis left;
             ylabel(ax,'Intensity');
-            set(ax,'YColor','k');
+            set(ax,'ycolor','k');
             
             leg = [leg;'Trace data'];
         end
@@ -408,32 +408,26 @@ function tracer_lbx_changed(~,~,G)
             
             yyaxis left;
             ylabel(ax,'Intensity');
-            set(ax,'YColor','k');
+            set(ax,'ycolor','k');
             
             leg = [leg;'Fit function'];
         end
         
-        
-        
         if analysis_h.SidePanel.PlotControl.MonomerNumber.Main.Value
-
+%             p = plot(ax,...
+%                 (1:sz)/100,C.Traces{1}.MonomerNumber{k}.*C.Traces{1}.RealStep{k},'r');
             yyaxis right;
-            ylabel(ax,'Monomer number');
-            set(ax,'YColor','r');
             p = plot(ax,...
             	(1:sz)/100,C.Traces{1}.MonomerNumber{k},'r');
-            
-            ax = analysis_h.MainPanel.StepFit;
-            
-            get(ax.YAxis)
-            %ax.YAxis(2).Label.String = 'Monomer Number';
-            %ax.YAxis(2).Color = 'r';
+
+            ax.YAxis(2).Label.String = 'Monomer Number';
+            ax.YAxis(2).Color = 'r';
             
             % resize y-right-axis to match y-left-axis
             if analysis_h.SidePanel.PlotControl.FitFunction.Main.Value || ...
                     analysis_h.SidePanel.PlotControl.TraceData.Main.Value
                 left_limits = ax.YAxis(1).Limits;
-                   ax.YAxis(2).Limits = left_limits./C.Traces{1}.RealStep{k};
+                ax.YAxis(2).Limits = left_limits./C.Traces{1}.RealStep{k};
                 right_limits = ax.YAxis(2).Limits;
                 ax.YAxis(2).TickValues = 0:ceil(right_limits(2));
             else
@@ -460,7 +454,7 @@ function tracer_lbx_changed(~,~,G)
         xlabel(ax,'Time(s)');
         
     end
-    yyaxis left;
+
     hold(ax,'off');
 end
 
@@ -522,10 +516,10 @@ function change_display_mode(src,~,G)
     ax = analysis_h.MainPanel.HistogramDwell;
     
     switch src.Label
-        case 'Linear scale'
+        case 'Linear'
             set(ax,'XScale','linear');
             set(ax,'YScale','linear');
-        case 'Semi-Log scale'
+        case 'Log'
             set(ax,'XScale','linear');
             set(ax,'YScale','log');
     end

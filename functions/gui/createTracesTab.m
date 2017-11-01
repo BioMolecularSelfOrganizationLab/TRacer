@@ -270,6 +270,7 @@ updateTrace(G, o.Value);
 end
 
 function G = updateTrace(G,t,r)
+
 % update or redraw trace plots
 % G: GUI object; t: current trace number, r: plot mode changed -> recreate all plots
 
@@ -279,7 +280,7 @@ G = T.GUI;
 ht = G.Handles.Figure.Tabs.Traces;
 
 %% RECREATE TRACE PLOTS
-if t == 1 || exist('r','var') % r=1: recreate all plots (do is as rarely as possible (slow)
+if t == 1 || exist('r','var') % r=1: recreate all plots (do this as rarely as possible (slow))
     cellfun(@(x) x.TracesAxes.Main.Children.delete,ht.MainPanel.ChannelPanel(1:4)); % clear plot children
     cellfun(@(x,y) set(x.Main,'Title',[]),ht.MainPanel.ChannelPanel(1:4),'UniformOutput', false); % clear plot children[ht.MainPanel.ChannelPanel{1:4}.Main.Title]
     for i=1:4% remove deleted handles
@@ -316,6 +317,7 @@ if t == 1 || exist('r','var') % r=1: recreate all plots (do is as rarely as poss
                 
             end
         case 2 % one excitation per plot (show all cameras in one plot
+
             % update plot containers
             ch = 1/T.ALEXnumberofchannels; % normalized height of plot container
             %             ht.MainPanel.ChannelPanel{i}.Main.Position = [0,1-i*ch,1,ch];
@@ -374,12 +376,17 @@ function updateManualSelection(l)
                     at.Selection{3}.Main.XData=[s(1),s(2),s(2),s(1)]';
                     at.Selection{3}.Main.YData=[0,0,repmat(ymax,1,2)]';
 end
-        
+
+
 for i=1:length(T.ChannelsWithData)
+    
     C =  T.Channel{i};
     for j=1:numel(C.Traces) % loop over number of separate excitation wavelengths
         C = T.Channel{T.ChannelsWithData(i)};
+
         if ~isempty(C.Traces{j}.TracesCorrected{t}) && mean(C.Traces{j}.TracesCorrected{t}) ~= 0
+            
+           
             ap = ht.MainPanel.ParticlePanel{i}.ParticleAxes.Main;
             
             switch T.TraceDisplayMode
@@ -412,12 +419,18 @@ for i=1:length(T.ChannelsWithData)
             p.YData = C.Traces{j}.TracesCorrected{t};
             p.Parent.XLim = [0,max(p.XData)];
             ymax = 0;
+            ymin = 0;
             for n=4:numel(at.Main.Children)
-                ymax = max([ymax,at.Main.Children(n).YData])
+                ymax = max(at.Main.Children(n).YData);
             end;
-            ymax = ymax*1.2;
-            updateManualSelection(l);  
-            p.Parent.YLim = [-ymax*.1,ymax];
+            for n=4:numel(at.Main.Children)
+                ymin = min(at.Main.Children(n).YData);
+            end;
+            ymax = ymax + abs(ymax-ymin)*0.1;
+            ymin = ymin - abs(ymax-ymin)*0.1;
+            updateManualSelection(l);
+            
+            p.Parent.YLim = [ymin,ymax];
             
             
             %update slider label
@@ -700,10 +713,12 @@ function AnalyseTrace(~,~,G)
     movegui(w,[pos(1),pos(2)+57]);
 
     for i=1:numel(tr)
+
         waitbar(i/numel(tr),w,['Processing trace ',num2str(i),' of ',num2str(numel(tr))]);
         
         C.Traces{1}.StepsFitFunction{i} = stepfit1_alvaro(tr{i});
         aux = C.Traces{1}.StepsFitFunction{i};
+
         [C.Traces{1}.MonomerNumber{i},C.Traces{1}.RealStep{i}] = getNumSteps(aux);
         C.Traces{1}.AuxiliarArray{i} = diff(aux);
         C.Traces{1}.AuxiliarArray{i}(end+1) = 0;
@@ -712,6 +727,7 @@ function AnalyseTrace(~,~,G)
     close(w);
     
     % pos-process
+    
     auxArray = C.Traces{1}.AuxiliarArray;
     traces = C.Traces{1}.MonomerNumber;
     

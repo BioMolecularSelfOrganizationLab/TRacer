@@ -502,10 +502,6 @@ for i=1:size(T.ParticlesColocalized,1); text(T.ParticlesColocalized(i,2)+4,T.Par
 
 end
 
-function cbn_extract(cbn, ~, G)
-[I,BG] = extractTraces(C.Parent.RawData, C.Parent.MapToReference.transformPointsInverse(T.ParticlesColocalized(:,1:2)),C.Parent.MaskPSF,C.Parent.MaskBG,'sum');
-end
-
 function PSFCallback(o, ~,  G)
 
 % intial loading of GUI
@@ -610,6 +606,9 @@ for i = 1:length(T.ChannelsWithData)
                    
             end
             
+            % extraction pourposes
+            test = C.Traces{j}.TracesCorrected;
+            
              % reset FRET relationships and buttons
             G.Parent.FRETtable(:,3:end) = zeros(6,3);
             for k=1:5;hts.FRET.FrButton{k}.Main.CData = [];end
@@ -625,7 +624,6 @@ for i = 1:length(T.ChannelsWithData)
         error('Either single frame image stack or no particles detected for trace extraction.');
     end
 end
-
 T.GUI = G;
 % enable classification table
 set(G.Handles.Figure.Tabs.Traces.SidePanel.Classification.Table.Main,'Enable','on');
