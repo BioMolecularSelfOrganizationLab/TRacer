@@ -205,6 +205,7 @@ if file == 0;
     return;
 end
 
+
 for i=1:4
     C = T.Channel{i};
     if ~isempty(C.MapToReference)
