@@ -112,7 +112,7 @@ browse_button.Callback = {@browse,folder_name};
 end
 
 
-function save_btn(~,~,op_raw_box,op_steps_box,folder_name,file_name,tr)
+function save_btn(obj,~,op_raw_box,op_steps_box,folder_name,file_name,tr)
     
     sz1 = size(tr,2);
     sz2 = size(tr{1},2);
@@ -148,6 +148,8 @@ function save_btn(~,~,op_raw_box,op_steps_box,folder_name,file_name,tr)
     else
         save(strcat(folder,'\',file),'Raw','Step');
     end
+    
+    delete(obj.Parent);
 end
 
 
